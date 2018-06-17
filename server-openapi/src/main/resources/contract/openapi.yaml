@@ -1,0 +1,91 @@
+openapi: 3.0.1
+info:
+  title: People Management API
+  license:
+    name: Apache 2.0 License
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1-SNAPSHOT
+paths:
+  /api/people:
+    get:
+      tags:
+      - people
+      description: List all people
+      operationId: getPeople
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+    post:
+      tags:
+      - people
+      description: Create new person
+      operationId: addPerson
+      requestBody:
+        description: Person
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+        required: true
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        409:
+          description: Person with such e-mail already exists
+  /api/people/{email}:
+    get:
+      tags:
+      - people
+      description: Find person by e-mail
+      operationId: findPerson
+      parameters:
+      - name: email
+        in: path
+        description: E-Mail address to lookup for
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        404:
+          description: Person with such e-mail doesn't exists
+    delete:
+      tags:
+      - people
+      description: Delete existing person
+      operationId: deletePerson
+      parameters:
+      - name: email
+        in: path
+        description: E-Mail address to lookup for
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: Person has been deleted
+        404:
+          description: Person with such e-mail doesn't exists
+components:
+  schemas:
+    Person:
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
